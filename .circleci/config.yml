@@ -1,19 +1,23 @@
 version: 2.1
-  orbs:
-    apex: circleci/salesforce-apex@1.0.0
-  jobs:
-    install_authenticate:
-      docker:
-        - image: cimg/node:14.5
-      steps:
-        - checkout
-        - apex/setup:
-           defaultusername: test-kuhx2mytx0rx@example.com
-        - run:
-            name: Run your SFDX commands here
-            command: |
-              echo "You now have access to the sfdx cli and may execute commands against it. https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm"
-  workflows:
-    basic-test:
-      jobs:
-        - install_authenticate
+
+# Define the jobs we want to run for this project
+jobs:
+  build:
+    docker:
+      - image: cimg/base:2023.03
+    steps:
+      - checkout
+      - run: echo "this is the build job"
+  test:
+    docker:
+      - image: cimg/base:2023.03
+    steps:
+      - checkout
+      - run: echo "this is the test job"
+
+# Orchestrate our job run sequence
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test
